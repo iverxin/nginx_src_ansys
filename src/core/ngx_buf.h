@@ -27,11 +27,11 @@ struct ngx_buf_s {
     u_char          *end;           /* end of buffer */
     ngx_buf_tag_t    tag;
     ngx_file_t      *file;
-    ngx_buf_t       *shadow;
+    ngx_buf_t     *shadow;
 
 
     /* the buf's content could be changed */
-    unsigned         temporary:1;
+    unsigned         temporary:1; //这个是位域，占用结构体中的一位，只能取0/1
 
     /*
      * the buf's content is in a memory cache or in a read only memory

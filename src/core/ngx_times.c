@@ -62,6 +62,11 @@ static char  *week[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
+/**
+ * @brief  时间初始化
+ * @note   
+ * @retval 
+ */
 void
 ngx_time_init(void)
 {

@@ -190,7 +190,13 @@ static char        *ngx_signal;
 
 static char **ngx_os_environ;
 
-
+/**
+ * @brief  main主程序
+ * @note   
+ * @param  argc: 
+ * @param  *argv: 
+ * @retval 
+ */
 int ngx_cdecl
 main(int argc, char *const *argv)
 {
@@ -203,7 +209,7 @@ main(int argc, char *const *argv)
 
     ngx_debug_init();
 
-    if (ngx_strerror_init() != NGX_OK) {
+    if (ngx_strerror_init() != NGX_OK) {  
         return 1;
     }
 
@@ -385,11 +391,15 @@ main(int argc, char *const *argv)
     return 0;
 }
 
-
+/**
+ * @brief  根据全局状态打印到终端的帮助信息
+ * @note   包括ngx_show_help、ngx_show_configure的值
+ * @retval None
+ */
 static void
 ngx_show_version_info(void)
 {
-    ngx_write_stderr("nginx version: " NGINX_VER_BUILD NGX_LINEFEED);
+    ngx_write_stderr("nginx version: " NGINX_VER_BUILD NGX_LINEFEED); 
 
     if (ngx_show_help) {
         ngx_write_stderr(
@@ -737,17 +747,24 @@ ngx_exec_new_binary(ngx_cycle_t *cycle, char *const *argv)
     return pid;
 }
 
-
+/**
+ * @brief  解析传入参数
+ * @note   
+ * @param  argc:个数 
+ * @param  *argv:指针数组 
+ * @retval  解析状态
+ */
 static ngx_int_t
 ngx_get_options(int argc, char *const *argv)
 {
-    u_char     *p;
+    u_char     *p; 
     ngx_int_t   i;
-
+    //遍历传入参数
     for (i = 1; i < argc; i++) {
-
-        p = (u_char *) argv[i];
-
+        //argv[i]里面存放的是char的指针。
+        //地址类型转化 char->u_char
+        p = (u_char *) argv[i]; 
+        //第一个参数必须是 -
         if (*p++ != '-') {
             ngx_log_stderr(0, "invalid option: \"%s\"", argv[i]);
             return NGX_ERROR;
@@ -827,11 +844,12 @@ ngx_get_options(int argc, char *const *argv)
                 ngx_log_stderr(0, "option \"-g\" requires parameter");
                 return NGX_ERROR;
 
-            case 's':
-                if (*p) {
+            case 's':  //-s reload
+                
+                if (*p) { //不是空格
                     ngx_signal = (char *) p;
 
-                } else if (argv[++i]) {
+                } else if (argv[++i]) { //-s后边是空格，取下一个参数
                     ngx_signal = argv[i];
 
                 } else {
@@ -857,7 +875,7 @@ ngx_get_options(int argc, char *const *argv)
             }
         }
 
-    next:
+    next: //next入口是终止本次while循环，可以直接用continue。
 
         continue;
     }

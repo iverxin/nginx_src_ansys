@@ -17,7 +17,7 @@
  * NGX_MAX_ALLOC_FROM_POOL should be (ngx_pagesize - 1), i.e. 4095 on x86.
  * On Windows NT it decreases a number of locked pages in a kernel.
  */
-#define NGX_MAX_ALLOC_FROM_POOL  (ngx_pagesize - 1)
+#define NGX_MAX_ALLOC_FROM_POOL  (ngx_pagesize - 1)  //从地址池中申请的最大空间
 
 #define NGX_DEFAULT_POOL_SIZE    (16 * 1024)
 
@@ -31,21 +31,23 @@ typedef void (*ngx_pool_cleanup_pt)(void *data);
 
 typedef struct ngx_pool_cleanup_s  ngx_pool_cleanup_t;
 
+// 地址池清理 
 struct ngx_pool_cleanup_s {
-    ngx_pool_cleanup_pt   handler;
-    void                 *data;
+    ngx_pool_cleanup_pt   handler; //函数指针
+    void                 *data; //可接受任何类型指针
     ngx_pool_cleanup_t   *next;
 };
 
 
 typedef struct ngx_pool_large_s  ngx_pool_large_t;
 
+//打开内存表
 struct ngx_pool_large_s {
     ngx_pool_large_t     *next;
     void                 *alloc;
 };
 
-
+//地址池数据部分描述
 typedef struct {
     u_char               *last;
     u_char               *end;
@@ -53,10 +55,10 @@ typedef struct {
     ngx_uint_t            failed;
 } ngx_pool_data_t;
 
-
+//地址池
 struct ngx_pool_s {
     ngx_pool_data_t       d;
-    size_t                max;
+    size_t                max; 
     ngx_pool_t           *current;
     ngx_chain_t          *chain;
     ngx_pool_large_t     *large;
@@ -64,7 +66,7 @@ struct ngx_pool_s {
     ngx_log_t            *log;
 };
 
-
+//cleanup文件结构体
 typedef struct {
     ngx_fd_t              fd;
     u_char               *name;

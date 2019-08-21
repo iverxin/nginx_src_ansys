@@ -14,6 +14,13 @@ ngx_uint_t  ngx_pagesize_shift;
 ngx_uint_t  ngx_cacheline_size;
 
 
+/**
+ * @brief  申请尺寸为size的内存并加如log中。（就是malloc加入了log的功能）
+ * @note   
+ * @param  size: 申请的大小
+ * @param  *log: log
+ * @retval 返回申请内存的起始地址。
+ */
 void *
 ngx_alloc(size_t size, ngx_log_t *log)
 {
@@ -48,8 +55,17 @@ ngx_calloc(size_t size, ngx_log_t *log)
 
 #if (NGX_HAVE_POSIX_MEMALIGN)
 
+
+/**
+ * @brief  指定对齐方式，动态申请地址
+ * @note   
+ * @param  alignment: 对齐 16字节 ，也就是说这块内存是alignment的整数倍。（内存对齐）
+ * @param  size: 申请大小
+ * @param  *log: 
+ * @retval 申请的起始地址指针
+ */
 void *
-ngx_memalign(size_t alignment, size_t size, ngx_log_t *log)
+ngx_memalign(size_t alignment, size_t size, ngx_log_t *log) //
 {
     void  *p;
     int    err;
