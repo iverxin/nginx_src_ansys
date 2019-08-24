@@ -142,7 +142,13 @@ ngx_palloc(ngx_pool_t *pool, size_t size)
     return ngx_palloc_large(pool, size);
 }
 
-
+/**
+ * @brief  申请内存，不对齐
+ * @note   
+ * @param  *pool: 
+ * @param  size: 
+ * @retval None
+ */
 void *
 ngx_pnalloc(ngx_pool_t *pool, size_t size)
 {
