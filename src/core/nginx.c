@@ -212,14 +212,14 @@ main(int argc, char *const *argv)
     if (ngx_strerror_init() != NGX_OK) {  
         return 1;
     }
-
+    //解析参数
     if (ngx_get_options(argc, argv) != NGX_OK) {
         return 1;
     }
-
+    //是否输出version信息
     if (ngx_show_version) {
         ngx_show_version_info();
-
+        //config测试失败退出
         if (!ngx_test_config) {
             return 0;
         }
@@ -229,20 +229,20 @@ main(int argc, char *const *argv)
 
     ngx_time_init();
 
-#if (NGX_PCRE)
+#if (NGX_PCRE)//出事化两个全局函数指针，作用未知。
     ngx_regex_init();
 #endif
 
-    ngx_pid = ngx_getpid();
-    ngx_parent = ngx_getppid();
+    ngx_pid = ngx_getpid(); //获取当前pid
+    ngx_parent = ngx_getppid(); //获取父节点pid
 
-    log = ngx_log_init(ngx_prefix);
+    log = ngx_log_init(ngx_prefix); //log 模块初始化，返回log句柄
     if (log == NULL) {
         return 1;
     }
 
     /* STUB */
-#if (NGX_OPENSSL)
+#if (NGX_OPENSSL)  //如果设置了ssl选项，就进行ssl模块的初始化
     ngx_ssl_init(log);
 #endif
 
@@ -250,24 +250,24 @@ main(int argc, char *const *argv)
      * init_cycle->log is required for signal handlers and
      * ngx_process_options()
      */
-
+    //初始化cycle
     ngx_memzero(&init_cycle, sizeof(ngx_cycle_t));
     init_cycle.log = log;
     ngx_cycle = &init_cycle;
-
+    //在cycle.pool上初始化一个pool，大小1024
     init_cycle.pool = ngx_create_pool(1024, log);
     if (init_cycle.pool == NULL) {
         return 1;
     }
-
+    //保存argv参数
     if (ngx_save_argv(&init_cycle, argc, argv) != NGX_OK) {
         return 1;
     }
-
+    //处理参数赋值到cycle中
     if (ngx_process_options(&init_cycle) != NGX_OK) {
         return 1;
     }
-
+    //初始化系统
     if (ngx_os_init(log) != NGX_OK) {
         return 1;
     }
@@ -275,7 +275,7 @@ main(int argc, char *const *argv)
     /*
      * ngx_crc32_table_init() requires ngx_cacheline_size set in ngx_os_init()
      */
-
+    //初始化一致性hash链表
     if (ngx_crc32_table_init() != NGX_OK) {
         return 1;
     }
@@ -283,17 +283,17 @@ main(int argc, char *const *argv)
     /*
      * ngx_slab_sizes_init() requires ngx_pagesize set in ngx_os_init()
      */
-
+    //
     ngx_slab_sizes_init();
-
+    // 热启动时需要平滑过度
     if (ngx_add_inherited_sockets(&init_cycle) != NGX_OK) {
         return 1;
     }
-
+    // 前置模块初始化，对模块进行编号处理
     if (ngx_preinit_modules() != NGX_OK) {
         return 1;
     }
-
+    //全局变量cycle初始化
     cycle = ngx_init_cycle(&init_cycle);
     if (cycle == NULL) {
         if (ngx_test_config) {
@@ -329,17 +329,18 @@ main(int argc, char *const *argv)
 
         return 0;
     }
-
+    // 如果有信号，处理信号，比如nginx -s stop
     if (ngx_signal) {
         return ngx_signal_process(cycle, ngx_signal);
     }
-
+    
     ngx_os_status(cycle->log);
 
     ngx_cycle = cycle;
-
+    //   得到ngx_core_conf_t的配置文件指针
     ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
 
+    
     if (ccf->master && ngx_process == NGX_PROCESS_SINGLE) {
         ngx_process = NGX_PROCESS_MASTER;
     }
@@ -363,7 +364,7 @@ main(int argc, char *const *argv)
     }
 
 #endif
-
+    //创建pid文件
     if (ngx_create_pidfile(&ccf->pid, cycle->log) != NGX_OK) {
         return 1;
     }
@@ -383,7 +384,7 @@ main(int argc, char *const *argv)
 
     if (ngx_process == NGX_PROCESS_SINGLE) {
         ngx_single_process_cycle(cycle);
-
+    // 创建nginx的子进程
     } else {
         ngx_master_process_cycle(cycle);
     }
@@ -883,7 +884,14 @@ ngx_get_options(int argc, char *const *argv)
     return NGX_OK;
 }
 
-
+/**
+ * @brief  保存argv参数
+ * @note   
+ * @param  *cycle: 
+ * @param  argc: 
+ * @param  *argv: 
+ * @retval None
+ */
 static ngx_int_t
 ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv)
 {

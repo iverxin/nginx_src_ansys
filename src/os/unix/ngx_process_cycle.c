@@ -69,7 +69,12 @@ static ngx_cycle_t      ngx_exit_cycle;
 static ngx_log_t        ngx_exit_log;
 static ngx_open_file_t  ngx_exit_log_file;
 
-
+/**
+ * @brief  创建子进程
+ * @note 包括子进程的创建、事件监听、各种模块的运行等  
+ * @param  *cycle: 
+ * @retval 
+ */
 void
 ngx_master_process_cycle(ngx_cycle_t *cycle)
 {
