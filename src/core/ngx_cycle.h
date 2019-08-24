@@ -35,9 +35,9 @@ struct ngx_shm_zone_s {
     ngx_uint_t                noreuse;  /* unsigned  noreuse:1; */
 };
 
-
+//cycle 结构体
 struct ngx_cycle_s {
-    void                  ****conf_ctx;
+    void                  ****conf_ctx; //上下文数组，配置文件，每个模块的配置信息
     ngx_pool_t               *pool;
 
     ngx_log_t                *log;
@@ -57,7 +57,7 @@ struct ngx_cycle_s {
     ngx_uint_t                reusable_connections_n;
 
     ngx_array_t               listening;
-    ngx_array_t               paths;
+    ngx_array_t               paths;//路径数组
 
     ngx_array_t               config_dump;
     ngx_rbtree_t              config_dump_rbtree;
@@ -83,7 +83,7 @@ struct ngx_cycle_s {
     ngx_str_t                 hostname;
 };
 
-
+// core_conf_t 数据结构
 typedef struct {
     ngx_flag_t                daemon;
     ngx_flag_t                master;
