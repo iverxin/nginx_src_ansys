@@ -904,17 +904,17 @@ ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv)
 #else
     size_t     len;
     ngx_int_t  i;
-
+    //给全局变量
     ngx_os_argv = (char **) argv;
     ngx_argc = argc;
-
+    //并没有放在pool中，申请指针地址
     ngx_argv = ngx_alloc((argc + 1) * sizeof(char *), cycle->log);
     if (ngx_argv == NULL) {
         return NGX_ERROR;
     }
-
+    //对于每个参数，
     for (i = 0; i < argc; i++) {
-        len = ngx_strlen(argv[i]) + 1;
+        len = ngx_strlen(argv[i]) + 1; //计算每个参数的长度，+1是\0，因为strlen并不计算\0。
 
         ngx_argv[i] = ngx_alloc(len, cycle->log);
         if (ngx_argv[i] == NULL) {
@@ -933,6 +933,12 @@ ngx_save_argv(ngx_cycle_t *cycle, int argc, char *const *argv)
     return NGX_OK;
 }
 
+/**
+ * @brief  处理参数，挂载到cycle上。
+ * @note   
+ * @param  *cycle: 
+ * @retval None
+ */
 
 static ngx_int_t
 ngx_process_options(ngx_cycle_t *cycle)

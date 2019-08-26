@@ -15,7 +15,7 @@ ngx_uint_t  ngx_cacheline_size;
 
 
 /**
- * @brief  申请尺寸为size的内存并加如log中。（就是malloc加入了log的功能）
+ * @brief  申请尺寸为size的内存, 操作用log记录。（就是malloc加入了log的功能）
  * @note   
  * @param  size: 申请的大小
  * @param  *log: log
