@@ -44,7 +44,14 @@ ngx_strnlen(u_char *p, size_t n)
     return n;
 }
 
-
+/**
+ * @brief  字符串拷贝
+ * @note   
+ * @param  *dst:目标 
+ * @param  *src: 源
+ * @param  n: 长度
+ * @retval 返回dst
+ */
 u_char *
 ngx_cpystrn(u_char *dst, u_char *src, size_t n)
 {
